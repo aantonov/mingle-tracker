@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'optparse'
 require File.expand_path("./lib/mingle_client", File.dirname(__FILE__))
 require File.expand_path("./lib/utils", File.dirname(__FILE__))
@@ -44,14 +46,13 @@ opt_parser = OptionParser.new do |opt|
 
   opt.on("-h", "--help", "Show this message") do
     options[:help] = true
-    puts opt_parser
   end
 
   opt.separator ""
   opt.separator "Examples:"
-  opt.separator "#{__FILE__} -a                      #shows all cards for current sprint"
+  opt.separator "#{__FILE__} -a                      #shows all cards"
   opt.separator "#{__FILE__} -a -u                   #shows all cards for current user"
-  opt.separator "#{__FILE__} -d                      #shows all defects for current sprint"
+  opt.separator "#{__FILE__} -d --sprint             #shows all defects for current sprint"
   opt.separator "#{__FILE__} -d --sprint \"7\"         #shows all defects for specified sprint"
   opt.separator "#{__FILE__} -d -u \"John Smith\"      #shows defects owned by John's"
   opt.separator "#{__FILE__} -a --sprint \"7\"         #shows all cards for specified sprint"
@@ -69,7 +70,6 @@ cards = []
 
 if options[:all]
   filter.defect
-
   story_filter.story
   task_filter.task
 end
@@ -106,8 +106,7 @@ if options[:sprint]
   end
 end
 
-if not options[:help]
-
+if not options[:help] and not options.empty?
   if options[:all]
     cards = mingle.get_cards(story_filter.filter)
     cards += mingle.get_cards(task_filter.filter)
@@ -115,4 +114,6 @@ if not options[:help]
 
   cards += mingle.get_cards(filter.filter)
   CardViewer.new.view_cards(cards)
+else
+  puts opt_parser
 end
