@@ -1,0 +1,4 @@
+mingle:
+  url: <Mingle API url here>
+  username: <Username here>
+  password: <Password here>
